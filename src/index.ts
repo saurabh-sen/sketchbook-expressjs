@@ -1,18 +1,31 @@
 import express, { Express } from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import cors from 'cors'
+import cors from "cors";
+import { TActiveMenu } from "./utils/constant";
+require("dotenv").config();
 
-const URL = process.env.NODE_ENV !== 'PRODUCTION' ? process.env.CLIENT_URL : process.env.CLIENT_URL_PROD;
+const URL =
+  process.env.NODE_ENV === "development"
+    ? process.env.CLIENT_URL_DEV
+    : process.env.CLIENT_URL_PROD;
 
 const app: Express = express();
 const httpServer = createServer(app);
-app.use(cors({origin: URL}))
+app.use(cors({ origin: URL }));
 const io = new Server(httpServer, { cors: { origin: URL } });
 
 io.on("connection", (socket) => {
-  console.log("a user connected");
+  socket.on("beginPath", (args: { x: number; y: number }) => {
+    socket.broadcast.emit("beginPath", args);
+  });
+  socket.on('lineDraw', (args: {x: number, y: number}) => {
+    socket.broadcast.emit('lineDraw', args);
+  })
+  socket.on('changeConfig', (args: {color: string, size: number, activeMenu: TActiveMenu}) => {
+    socket.broadcast.emit('changeConfig', args);
+  })
 });
 
 httpServer.listen(5000);
-console.log('Server running on port 5000');
+console.log("Server running on port 5000");
