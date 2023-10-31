@@ -1,14 +1,26 @@
-FROM node
+# Stage 1: Build the Node.Js application
+FROM node:20 as builder
 
-# Create app directory
-WORKDIR /sketchbook
+# Create build directory
+WORKDIR /sketchbookBackendBuild
 
 # Copy all files
-COPY package.json package.json
-COPY yarn.lock yarn.lock
+COPY package.json yarn.lock ./
 
-RUN yarn
+RUN yarn index
 
 COPY . .
 
-ENTRYPOINT ["npx", "ts-node", "src/index.ts"]
+# Stage 2: Create a smaller image for running the application
+FROM node:20 as runner
+
+# Create app directory
+WORKDIR /sketchbookBackend
+
+# Copy build files
+COPY --from=builder /sketchbookBackendBuild/package.json ./package.json
+COPY --from=builder /sketchbookBackendBuild/node_modules ./node_modules
+COPY --from=builder /sketchbookBackendBuild/dist ./dist
+
+# Run the application
+CMD ["yarn", "start"]
