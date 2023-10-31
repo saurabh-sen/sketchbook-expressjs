@@ -7,9 +7,11 @@ WORKDIR /sketchbookBackendBuild
 # Copy all files
 COPY package.json yarn.lock ./
 
-RUN yarn index
+RUN yarn install
 
 COPY . .
+
+RUN yarn build
 
 # Stage 2: Create a smaller image for running the application
 FROM node:20 as runner
