@@ -27,5 +27,12 @@ io.on("connection", (socket) => {
   })
 });
 
+app.get('/', (req, res) => {
+  res.json({ message: "Hello World"});
+})
+app.get('/health', (req, res) => {
+  res.status(200).json({ message: "Everything is working fine here 🚀🎉"});
+})
+
 httpServer.listen(5000);
 console.log("Server running on port 5000");
