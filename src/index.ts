@@ -5,10 +5,7 @@ import cors from "cors";
 import { TActiveMenu } from "./utils/constant";
 require("dotenv").config();
 
-const URL =
-  process.env.NODE_ENV === "development"
-    ? process.env.CLIENT_URL_DEV
-    : process.env.CLIENT_URL_PROD;
+const URL = "http://52.2.149.85:3000";
 
 const app: Express = express();
 const httpServer = createServer(app);
@@ -28,7 +25,7 @@ io.on("connection", (socket) => {
 });
 
 app.get('/', (req, res) => {
-  res.json({ message: "Hello World"});
+  res.json({ message: `Welcome to the server 🚀🎉`});
 })
 app.get('/health', (req, res) => {
   res.status(200).json({ message: "Everything is working fine here 🚀🎉"});
