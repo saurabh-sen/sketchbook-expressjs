@@ -6,6 +6,7 @@ import { TActiveMenu } from "./utils/constant";
 require("dotenv").config();
 
 const URL = "http://52.2.149.85:3000";
+// const URL = "http://localhost:3000";
 
 const app: Express = express();
 const httpServer = createServer(app);
